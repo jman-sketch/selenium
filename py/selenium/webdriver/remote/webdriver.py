@@ -51,6 +51,7 @@ from selenium.webdriver.common.virtual_authenticator import VirtualAuthenticator
 from selenium.webdriver.common.virtual_authenticator import (
     required_virtual_authenticator,
 )
+from selenium.webdriver.remote.network import Network
 from selenium.webdriver.support.relative_locator import RelativeBy
 
 from .bidi_connection import BidiConnection
@@ -213,6 +214,7 @@ class WebDriver(BaseWebDriver):
 
         self._websocket_connection = None
         self._script = None
+        self._network = None
 
     def __repr__(self):
         return f'<{type(self).__module__}.{type(self).__name__} (session="{self.session_id}")>'
@@ -1079,6 +1081,13 @@ class WebDriver(BaseWebDriver):
             self._script = Script(self._websocket_connection)
 
         return self._script
+
+    @property
+    def network(self):
+        if not self._network:
+            self._network = Network(self.caps.get("webSocketUrl"))
+
+        return self._network
 
     def _start_bidi(self):
         if self.caps.get("webSocketUrl"):

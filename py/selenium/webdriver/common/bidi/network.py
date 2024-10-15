@@ -3,6 +3,7 @@ import typing
 from dataclasses import dataclass, fields, is_dataclass
 
 from selenium.webdriver.common.bidi.cdp import import_devtools
+from selenium.webdriver.common.bidi.session import session_subscribe
 
 from . import script
 
@@ -489,3 +490,27 @@ class RemoveIntercept:
         result = yield self.to_json()
         return result
 
+
+class Network:
+    def __init__(self, conn):
+
+        self.conn = conn
+        self.callbacks = {}
+
+    async def add_intercept(self, event, params: AddInterceptParameters):
+        await self.bidi.execute(session_subscribe(event.event_class))
+        result = await self.bidi.execute(AddIntercept(params).cmd())
+        return result
+
+    async def add_listener(self, event, callback):
+        listener = self.bidi.listen(event)
+
+        async for event in listener:
+            request_data = BeforeRequestSentParameters.from_json(
+                event.to_json()["params"]
+            )
+            await callback(request_data)
+
+    async def continue_request(self, params: ContinueRequestParameters):
+        result = await self.bidi.execute(ContinueRequest(params).cmd())
+        return result
