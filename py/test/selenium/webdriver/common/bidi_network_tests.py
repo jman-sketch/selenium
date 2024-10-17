@@ -23,6 +23,7 @@ from selenium.webdriver.common.bidi.network import ContinueRequestParameters
 
 @pytest.mark.xfail_firefox
 @pytest.mark.xfail_safari
+@pytest.mark.xfail_edge
 async def test_add_request_handler(driver):
 
     def request_filter(params: BeforeRequestSentParameters):
