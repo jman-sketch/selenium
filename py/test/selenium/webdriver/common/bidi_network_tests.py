@@ -20,9 +20,8 @@ from selenium.webdriver.common.bidi.network import BeforeRequestSentParameters, 
 from selenium.webdriver.common.bidi.cdp import open_cdp
 import trio
 
-@pytest.mark.xfail_safari
-@pytest.mark.xfail_firefox
-@pytest.mark.xfail_opera
+
+@pytest.mark.no_driver_after_test
 async def test_add_request_handler(driver):
 
     def request_filter(params: BeforeRequestSentParameters):
@@ -30,10 +29,7 @@ async def test_add_request_handler(driver):
 
     def request_handler(params: BeforeRequestSentParameters):
         request = params.request["request"]
-        json = {
-            "request": request,
-            "url" : "https://www.selenium.dev/about/"
-        }
+        json = {"request": request, "url": "https://www.selenium.dev/about/"}
         return ContinueRequestParameters(**json)
 
     ws_url = driver.caps.get("webSocketUrl")
@@ -41,9 +37,9 @@ async def test_add_request_handler(driver):
         async with trio.open_nursery() as nursery:
             nursery.start_soon(driver.network.add_request_handler, request_filter, request_handler, conn)
             await trio.sleep(1)
-            await driver.network.get("https://www.example.com",conn)
+            await driver.network.get("https://www.example.com", conn)
             assert "Selenium" in driver.title
             await trio.sleep(1)
             await driver.network.remove_request_handler()
-            await driver.network.get("https://www.example.com",conn)
+            await driver.network.get("https://www.example.com", conn)
             assert "Example" in driver.title

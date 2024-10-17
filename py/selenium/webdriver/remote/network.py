@@ -15,7 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 from dataclasses import fields
-
+import trio
 from selenium.webdriver.common.bidi import network
 from selenium.webdriver.common.bidi.browsing_context import Navigate, NavigateParameters
 from selenium.webdriver.common.bidi.network import (
@@ -35,16 +35,19 @@ class Network:
         self.network = None
         self.driver = driver
         self.intercept = None
+        self.scope = None
 
     async def add_request_handler(self, request_filter=lambda _: True, handler=default_request_handler, conn=None):
-        self.network = network.Network(conn)
-        params = AddInterceptParameters(["beforeRequestSent"])
-        callback = self._callback(request_filter, handler)
-        result = await self.network.add_intercept(event=BeforeRequestSent, params=params)
-        intercept = result["intercept"]
-        self.intercept = intercept
-        await self.network.add_listener(event=BeforeRequestSent, callback=callback)
-        return intercept
+        with trio.CancelScope() as scope:
+            self.scope = scope
+            self.network = network.Network(conn)
+            params = AddInterceptParameters(["beforeRequestSent"])
+            callback = self._callback(request_filter, handler)
+            result = await self.network.add_intercept(event=BeforeRequestSent, params=params)
+            intercept = result["intercept"]
+            self.intercept = intercept
+            await self.network.add_listener(event=BeforeRequestSent, callback=callback)
+            return intercept
 
     async def get(self, url, conn):
         params = NavigateParameters(context=self.driver.current_window_handle, url=url)
@@ -52,6 +55,7 @@ class Network:
 
     async def remove_request_handler(self):
         await self.network.remove_intercept(event=BeforeRequestSent, params=network.RemoveInterceptParameters(self.intercept))
+        self.scope.cancel()
 
     def _callback(self, request_filter, handler):
         async def callback(request):
