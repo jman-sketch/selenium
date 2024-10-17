@@ -1,6 +1,7 @@
 from dataclasses import fields
 
 from selenium.webdriver.common.bidi import network
+from selenium.webdriver.common.bidi.browsing_context import Navigate, NavigateParameters
 from selenium.webdriver.common.bidi.network import (
     AddInterceptParameters,
     BeforeRequestSent,
@@ -28,6 +29,10 @@ class Network:
         self.intercept = intercept
         await self.network.add_listener(event=BeforeRequestSent, callback=callback)
         return intercept
+
+    async def get(self, url, conn):
+        params = NavigateParameters(context=self.driver.current_window_handle, url=url)
+        await conn.execute(Navigate(params).cmd())
 
     def _callback(self, request_filter, handler):
         async def callback(request):
