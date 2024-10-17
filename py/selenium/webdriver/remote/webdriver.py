@@ -51,7 +51,6 @@ from selenium.webdriver.common.virtual_authenticator import VirtualAuthenticator
 from selenium.webdriver.common.virtual_authenticator import (
     required_virtual_authenticator,
 )
-from selenium.webdriver.remote.network import Network
 from selenium.webdriver.support.relative_locator import RelativeBy
 
 from .bidi_connection import BidiConnection
@@ -60,6 +59,7 @@ from .errorhandler import ErrorHandler
 from .file_detector import FileDetector
 from .file_detector import LocalFileDetector
 from .mobile import Mobile
+from .network import Network
 from .remote_connection import RemoteConnection
 from .script_key import ScriptKey
 from .shadowroot import ShadowRoot
