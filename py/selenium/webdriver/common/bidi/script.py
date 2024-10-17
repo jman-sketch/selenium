@@ -126,7 +126,7 @@ class StackFrame:
                 continue
             if is_dataclass(value):
                 value = value.to_json()
-            json = json | {re.sub(r"^_", "", key): value}
+            json[re.sub(r"^_", "", key)] = value
         return json
 
     @classmethod
@@ -147,7 +147,7 @@ class StackTrace:
                 continue
             if is_dataclass(value):
                 value = value.to_json()
-            json = json | {re.sub(r"^_", "", key): value}
+            json[re.sub(r"^_", "", key)] = value
         return json
 
     @classmethod

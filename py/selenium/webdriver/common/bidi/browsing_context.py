@@ -39,7 +39,7 @@ class NavigateParameters:
                 continue
             if is_dataclass(value):
                 value = value.to_json()
-            json = json | {re.sub(r"^_", "", key): value}
+            json[re.sub(r"^_", "", key)] = value
         return json
 
     @classmethod
@@ -60,7 +60,7 @@ class Navigate:
                 continue
             if is_dataclass(value):
                 value = value.to_json()
-            json = json | {re.sub(r"^_", "", key): value}
+            json[re.sub(r"^_", "", key)] = value
         return json
 
     @classmethod
