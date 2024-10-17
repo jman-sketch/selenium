@@ -17,7 +17,8 @@
 import pytest
 
 from selenium.webdriver.common.bidi.network import BeforeRequestSentParameters, ContinueRequestParameters
-
+from selenium.webdriver.common.bidi.cdp import open_cdp
+import trio
 
 @pytest.mark.xfail_safari
 @pytest.mark.xfail_firefox
@@ -35,6 +36,14 @@ async def test_add_request_handler(driver):
         }
         return ContinueRequestParameters(**json)
 
-    await driver.network.add_request_handler(request_filter, request_handler)
-    driver.get("https://www.example.com/")
-    assert driver.current_url == "https://www.selenium.dev/about/"
+    ws_url = driver.caps.get("webSocketUrl")
+    async with open_cdp(ws_url) as conn:
+        async with trio.open_nursery() as nursery:
+            nursery.start_soon(driver.network.add_request_handler, request_filter, request_handler, conn)
+            await trio.sleep(1)
+            await driver.network.get("https://www.example.com",conn)
+            assert "Selenium" in driver.title
+            await trio.sleep(1)
+            await driver.network.remove_request_handler()
+            await driver.network.get("https://www.example.com",conn)
+            assert "Example" in driver.title
