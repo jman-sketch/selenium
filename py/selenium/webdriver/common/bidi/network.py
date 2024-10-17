@@ -3,7 +3,7 @@ import typing
 from dataclasses import dataclass, fields, is_dataclass
 
 from selenium.webdriver.common.bidi.cdp import import_devtools
-from selenium.webdriver.common.bidi.session import session_subscribe
+from selenium.webdriver.common.bidi.session import session_subscribe, session_unsubscribe
 
 from . import script
 
@@ -514,3 +514,7 @@ class Network:
     async def continue_request(self, params: ContinueRequestParameters):
         result = await self.conn.execute(ContinueRequest(params).cmd())
         return result
+
+    async def remove_intercept(self, event, params: RemoveInterceptParameters):
+        await self.conn.execute(session_unsubscribe(event.event_class))
+        await self.conn.execute(RemoveIntercept(params).cmd())

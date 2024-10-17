@@ -34,6 +34,9 @@ class Network:
         params = NavigateParameters(context=self.driver.current_window_handle, url=url)
         await conn.execute(Navigate(params).cmd())
 
+    async def remove_request_handler(self):
+        await self.network.remove_intercept(event=BeforeRequestSent, params=network.RemoveInterceptParameters(self.intercept))
+
     def _callback(self, request_filter, handler):
         async def callback(request):
             if request_filter(request):
