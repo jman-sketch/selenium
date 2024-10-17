@@ -15,10 +15,11 @@
 # specific language governing permissions and limitations
 # under the License.
 import pytest
-
-from selenium.webdriver.common.bidi.network import BeforeRequestSentParameters, ContinueRequestParameters
-from selenium.webdriver.common.bidi.cdp import open_cdp
 import trio
+
+from selenium.webdriver.common.bidi.cdp import open_cdp
+from selenium.webdriver.common.bidi.network import BeforeRequestSentParameters
+from selenium.webdriver.common.bidi.network import ContinueRequestParameters
 
 
 @pytest.mark.no_driver_after_test
@@ -35,7 +36,12 @@ async def test_add_request_handler(driver):
     ws_url = driver.caps.get("webSocketUrl")
     async with open_cdp(ws_url) as conn:
         async with trio.open_nursery() as nursery:
-            nursery.start_soon(driver.network.add_request_handler, request_filter, request_handler, conn)
+            nursery.start_soon(
+                driver.network.add_request_handler,
+                request_filter,
+                request_handler,
+                conn,
+            )
             await trio.sleep(1)
             await driver.network.get("https://www.example.com", conn)
             assert "Selenium" in driver.title
