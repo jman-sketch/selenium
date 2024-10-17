@@ -42,7 +42,7 @@ class StringValue:
                 continue
             if is_dataclass(value):
                 value = value.to_json()
-            json = json | {re.sub(r"^_", "", key): value}
+            json[re.sub(r"^_", "", key)] = value
         return json
 
     @classmethod
@@ -64,7 +64,7 @@ class Base64Value:
                 continue
             if is_dataclass(value):
                 value = value.to_json()
-            json = json | {re.sub(r"^_", "", key): value}
+            json[re.sub(r"^_", "", key)] = value
         return json
 
     @classmethod
@@ -90,7 +90,7 @@ class UrlPatternPattern:
                 continue
             if is_dataclass(value):
                 value = value.to_json()
-            json = json | {re.sub(r"^_", "", key): value}
+            json[re.sub(r"^_", "", key)] = value
         return json
 
     @classmethod
@@ -112,7 +112,7 @@ class UrlPatternString:
                 continue
             if is_dataclass(value):
                 value = value.to_json()
-            json = json | {re.sub(r"^_", "", key): value}
+            json[re.sub(r"^_", "", key)] = value
         return json
 
     @classmethod
@@ -134,7 +134,7 @@ class CookieHeader:
                 continue
             if is_dataclass(value):
                 value = value.to_json()
-            json = json | {re.sub(r"^_", "", key): value}
+            json[re.sub(r"^_", "", key)] = value
         return json
 
     @classmethod
@@ -156,7 +156,7 @@ class Header:
                 continue
             if is_dataclass(value):
                 value = value.to_json()
-            json = json | {re.sub(r"^_", "", key): value}
+            json[re.sub(r"^_", "", key)] = value
         return json
 
     @classmethod
@@ -182,7 +182,7 @@ class ContinueRequestParameters:
                 continue
             if is_dataclass(value):
                 value = value.to_json()
-            json = json | {re.sub(r"^_", "", key): value}
+            json[re.sub(r"^_", "", key)] = value
         return json
 
     @classmethod
@@ -204,7 +204,7 @@ class ContinueRequest:
                 continue
             if is_dataclass(value):
                 value = value.to_json()
-            json = json | {re.sub(r"^_", "", key): value}
+            json[re.sub(r"^_", "", key)] = value
         return json
 
     @classmethod
@@ -237,7 +237,7 @@ class Cookie:
                 continue
             if is_dataclass(value):
                 value = value.to_json()
-            json = json | {re.sub(r"^_", "", key): value}
+            json[re.sub(r"^_", "", key)] = value
         return json
 
     @classmethod
@@ -270,7 +270,7 @@ class FetchTimingInfo:
                 continue
             if is_dataclass(value):
                 value = value.to_json()
-            json = json | {re.sub(r"^_", "", key): value}
+            json[re.sub(r"^_", "", key)] = value
         return json
 
     @classmethod
@@ -298,7 +298,7 @@ class RequestData:
                 continue
             if is_dataclass(value):
                 value = value.to_json()
-            json = json | {re.sub(r"^_", "", key): value}
+            json[re.sub(r"^_", "", key)] = value
         return json
 
     @classmethod
@@ -325,7 +325,7 @@ class BaseParameters:
                 continue
             if is_dataclass(value):
                 value = value.to_json()
-            json = json | {re.sub(r"^_", "", key): value}
+            json[re.sub(r"^_", "", key)] = value
         return json
 
     @classmethod
@@ -350,7 +350,7 @@ class Initiator:
                 continue
             if is_dataclass(value):
                 value = value.to_json()
-            json = json | {re.sub(r"^_", "", key): value}
+            json[re.sub(r"^_", "", key)] = value
         return json
 
     @classmethod
@@ -378,7 +378,7 @@ class BeforeRequestSentParameters:
                 continue
             if is_dataclass(value):
                 value = value.to_json()
-            json = json | {re.sub(r"^_", "", key): value}
+            json[re.sub(r"^_", "", key)] = value
         return json
 
     @classmethod
@@ -401,7 +401,7 @@ class BeforeRequestSent:
                 continue
             if is_dataclass(value):
                 value = value.to_json()
-            json = json | {re.sub(r"^_", "", key): value}
+            json[re.sub(r"^_", "", key)] = value
         return json
 
     @classmethod
@@ -427,7 +427,7 @@ class AddInterceptParameters:
                 continue
             if is_dataclass(value):
                 value = value.to_json()
-            json = json | {re.sub(r"^_", "", key): value}
+            json[re.sub(r"^_", "", key)] = value
         return json
 
     @classmethod
@@ -449,7 +449,7 @@ class AddIntercept:
                 continue
             if is_dataclass(value):
                 value = value.to_json()
-            json = json | {re.sub(r"^_", "", key): value}
+            json[re.sub(r"^_", "", key)] = value
         return json
 
     @classmethod
@@ -474,7 +474,7 @@ class RemoveInterceptParameters:
                 continue
             if is_dataclass(value):
                 value = value.to_json()
-            json = json | {re.sub(r"^_", "", key): value}
+            json[re.sub(r"^_", "", key)] = value
         return json
 
     @classmethod
@@ -496,7 +496,7 @@ class RemoveIntercept:
                 continue
             if is_dataclass(value):
                 value = value.to_json()
-            json = json | {re.sub(r"^_", "", key): value}
+            json[re.sub(r"^_", "", key)] = value
         return json
 
     @classmethod
