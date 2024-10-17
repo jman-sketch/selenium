@@ -1,7 +1,6 @@
 from dataclasses import fields
 
 from selenium.webdriver.common.bidi import network
-from selenium.webdriver.common.bidi.cdp import open_cdp
 from selenium.webdriver.common.bidi.network import (
     AddInterceptParameters,
     BeforeRequestSent,
@@ -15,20 +14,20 @@ def default_request_handler(params: BeforeRequestSentParameters):
 
 
 class Network:
-    def __init__(self, ws_url):
-        self.ws_url = ws_url
+    def __init__(self, driver):
         self.network = None
+        self.driver = driver
+        self.intercept = None
 
-    async def add_request_handler(self, request_filter=lambda _: True, handler=default_request_handler):
-        async with open_cdp(self.ws_url) as conn:
-            if not self.network:
-                self.network = network.Network(conn)
-            params = AddInterceptParameters(["beforeRequestSent"])
-            result = await self.network.add_intercept(event=BeforeRequestSent, params=params)
-            intercept = result["intercept"]
-            callback = self._callback(request_filter, handler)
-            await self.network.add_listener(BeforeRequestSent, callback)
-            return intercept
+    async def add_request_handler(self, request_filter=lambda _: True, handler=default_request_handler, conn=None):
+        self.network = network.Network(conn)
+        params = AddInterceptParameters(["beforeRequestSent"])
+        callback = self._callback(request_filter, handler)
+        result = await self.network.add_intercept(event=BeforeRequestSent, params=params)
+        intercept = result["intercept"]
+        self.intercept = intercept
+        await self.network.add_listener(event=BeforeRequestSent, callback=callback)
+        return intercept
 
     def _callback(self, request_filter, handler):
         async def callback(request):

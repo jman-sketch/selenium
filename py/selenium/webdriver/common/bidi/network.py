@@ -498,12 +498,12 @@ class Network:
         self.callbacks = {}
 
     async def add_intercept(self, event, params: AddInterceptParameters):
-        await self.bidi.execute(session_subscribe(event.event_class))
-        result = await self.bidi.execute(AddIntercept(params).cmd())
+        await self.conn.execute(session_subscribe(event.event_class))
+        result = await self.conn.execute(AddIntercept(params).cmd())
         return result
 
     async def add_listener(self, event, callback):
-        listener = self.bidi.listen(event)
+        listener = self.conn.listen(event)
 
         async for event in listener:
             request_data = BeforeRequestSentParameters.from_json(
@@ -512,5 +512,5 @@ class Network:
             await callback(request_data)
 
     async def continue_request(self, params: ContinueRequestParameters):
-        result = await self.bidi.execute(ContinueRequest(params).cmd())
+        result = await self.conn.execute(ContinueRequest(params).cmd())
         return result

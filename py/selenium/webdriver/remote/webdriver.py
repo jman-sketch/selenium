@@ -1085,7 +1085,7 @@ class WebDriver(BaseWebDriver):
     @property
     def network(self):
         if not self._network:
-            self._network = Network(self.caps.get("webSocketUrl"))
+            self._network = Network(self)
 
         return self._network
 
