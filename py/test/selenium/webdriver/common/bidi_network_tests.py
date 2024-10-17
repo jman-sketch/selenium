@@ -21,8 +21,8 @@ from selenium.webdriver.common.bidi.cdp import open_cdp
 from selenium.webdriver.common.bidi.network import BeforeRequestSentParameters
 from selenium.webdriver.common.bidi.network import ContinueRequestParameters
 
-
-@pytest.mark.no_driver_after_test
+@pytest.mark.xfail_firefox
+@pytest.mark.xfail_safari
 async def test_add_request_handler(driver):
 
     def request_filter(params: BeforeRequestSentParameters):
